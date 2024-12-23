@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Coupons</title>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-color: #4caf50;
+            color: white;
+            padding: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .coupon-button {
+            flex: 1 1 calc(45% - 1rem); /* Buttons take up 45% of the row on larger screens */
+            max-width: 300px;           /* Prevent buttons from growing too large */
+            min-width: 150px;           /* Prevent buttons from becoming too small */
+            margin: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-align: center;
+        }
+
+        .coupon-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Confirmation Styles */
+        .confirmation {
+            margin-top: 10px;
+            color: green;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            .coupon-button {
+                flex: 1 1 100%; /* Buttons take up full width on smaller screens */
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            p {
+                font-size: 0.8rem;
+            }
+
+            .coupon-button {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Household Coupons</h1>
+        <p>Click a button to activate a coupon!</p>
+    </header>
+    <div class="container">
+        <!-- Example Coupons -->
+        <div>
+            <button class="coupon-button" onclick="sendCouponEmail(this, 'Cleaning the Kitchen')">Clean the Kitchen</button>
+            <p class="confirmation" style="display:none;"></p>
+        </div>
+        <div>
+            <button class="coupon-button" onclick="sendCouponEmail(this, 'Vacuuming the Living Room')">Vacuum Living Room</button>
+            <p class="confirmation" style="display:none;"></p>
+        </div>
+        <div>
+            <button class="coupon-button" onclick="sendCouponEmail(this, 'Mowing the Lawn')">Mow the Lawn</button>
+            <p class="confirmation" style="display:none;"></p>
+        </div>
+        <div>
+            <button class="coupon-button" onclick="sendCouponEmail(this, 'Scrabble Session')">Scrabble session</button>
+            <p class="confirmation" style="display:none;"></p>
+        </div>
+        <div>
+            <button class="coupon-button" onclick="sendCouponEmail(this, 'Free Hug')">Free Hug</button>
+            <p class="confirmation" style="display:none;"></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        emailjs.init('lY_TBga4LAn4UfOqE'); // Replace with your EmailJS Public Key
+
+        function sendCouponEmail(button, couponName) {
+            const templateParams = {
+                to_email: 'filipb.may@gmail.com',
+                coupon_name: couponName
+            };
+
+            emailjs.send('service_me1te7g', 'template_zzok6wk', templateParams)
+                .then(function(response) {
+                    // Display confirmation
+                    const confirmationMessage = button.nextElementSibling;
+                    confirmationMessage.style.display = 'block';
+                    confirmationMessage.textContent = `Coupon "${couponName}" has been activated!`;
+
+                    // Change button style temporarily
+                    button.style.backgroundColor = '#28a745';
+                    button.textContent = 'Activated';
+                    button.disabled = true;
+
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                    alert('Failed to send email. Please try again.');
+                    console.error('FAILED...', error);
+                });
+        }
+    </script>
+</body>
+</html>
