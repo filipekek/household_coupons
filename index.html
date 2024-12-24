@@ -67,12 +67,41 @@
             color: green;
             font-size: 0.9rem;
         }
+
+        .custom-coupon {
+            margin-top: 20px;
+        }
+
+        .custom-coupon input[type="text"] {
+            width: calc(100% - 20px);
+            max-width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .custom-coupon button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .custom-coupon button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Household Coupons</h1>
-        <p>Click a button to activate a coupon!</p>
+        <p>Click a button to activate a coupon or submit your own idea!</p>
     </header>
     <div class="container">
         <!-- Example Coupons -->
@@ -98,41 +127,73 @@
         </div>
     </div>
 
+    <!-- Custom Coupon Submission -->
+    <div class="custom-coupon">
+        <input type="text" id="customCoupon" placeholder="Enter your custom coupon idea">
+        <button onclick="submitCustomCoupon()">Submit Custom Coupon</button>
+    </div>
+
     <script>
         // Initialize EmailJS
         emailjs.init('lY_TBga4LAn4UfOqE'); // Replace with your EmailJS Public Key
 
         function handleCouponClick(couponName) {
-            // Prompt the user for their name
             const senderName = prompt("Please enter your name:");
 
-            // If the user cancels or enters nothing, return
             if (!senderName) {
                 alert("Name is required to activate the coupon.");
                 return;
             }
 
-            // Prepare template parameters
             const templateParams = {
                 to_email: 'filipb.may@gmail.com',
                 coupon_name: couponName,
                 sender_name: senderName
             };
 
-            // Send the email
             emailjs.send('service_me1te7g', 'template_zzok6wk', templateParams)
                 .then(function(response) {
-                    // Display confirmation
                     const button = document.querySelector(`button[onclick="handleCouponClick('${couponName}')"]`);
                     const confirmationMessage = button.nextElementSibling;
                     confirmationMessage.style.display = 'block';
                     confirmationMessage.textContent = `Coupon "${couponName}" has been activated by ${senderName}!`;
 
-                    // Change button style temporarily
                     button.style.backgroundColor = '#28a745';
                     button.textContent = 'Activated';
                     button.disabled = true;
 
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                    alert('Failed to send email. Please try again.');
+                    console.error('FAILED...', error);
+                });
+        }
+
+        function submitCustomCoupon() {
+            const customCoupon = document.getElementById('customCoupon').value.trim();
+
+            if (!customCoupon) {
+                alert("Please enter a custom coupon idea.");
+                return;
+            }
+
+            const senderName = prompt("Please enter your name:");
+
+            if (!senderName) {
+                alert("Name is required to submit the coupon.");
+                return;
+            }
+
+            const templateParams = {
+                to_email: 'filipb.may@gmail.com',
+                coupon_name: customCoupon,
+                sender_name: senderName
+            };
+
+            emailjs.send('service_me1te7g', 'template_zzok6wk', templateParams)
+                .then(function(response) {
+                    alert(`Custom coupon "${customCoupon}" has been submitted by ${senderName}!`);
+                    document.getElementById('customCoupon').value = ""; // Clear the input field
                     console.log('SUCCESS!', response.status, response.text);
                 }, function(error) {
                     alert('Failed to send email. Please try again.');
