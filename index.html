@@ -69,7 +69,12 @@
         }
 
         .custom-coupon {
-            margin-top: 20px;
+            margin-top: 30px; /* More separation from the main buttons */
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            display: inline-block; /* Keep it compact */
+            text-align: center;
         }
 
         .custom-coupon input[type="text"] {
@@ -117,18 +122,11 @@
             <button class="coupon-button" onclick="handleCouponClick('Mowing the Lawn')">Mow the Lawn</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
-        <div>
-            <button class="coupon-button" onclick="handleCouponClick('Scrabble Session')">Scrabble session</button>
-            <p class="confirmation" style="display:none;"></p>
-        </div>
-        <div>
-            <button class="coupon-button" onclick="handleCouponClick('Free Hug')">Free Hug</button>
-            <p class="confirmation" style="display:none;"></p>
-        </div>
     </div>
 
     <!-- Custom Coupon Submission -->
     <div class="custom-coupon">
+        <h2>Submit Your Custom Coupon</h2>
         <input type="text" id="customCoupon" placeholder="Enter your custom coupon idea">
         <button onclick="submitCustomCoupon()">Submit Custom Coupon</button>
     </div>
