@@ -41,9 +41,9 @@
         }
 
         .coupon-button {
-            flex: 1 1 calc(45% - 1rem); /* Buttons take up 45% of the row on larger screens */
-            max-width: 300px;           /* Prevent buttons from growing too large */
-            min-width: 150px;           /* Prevent buttons from becoming too small */
+            flex: 1 1 calc(45% - 1rem);
+            max-width: 300px;
+            min-width: 150px;
             margin: 10px;
             padding: 15px;
             font-size: 1rem;
@@ -61,76 +61,38 @@
             transform: scale(1.05);
         }
 
-        /* Confirmation Styles */
         .confirmation {
             margin-top: 10px;
             color: green;
             font-size: 0.9rem;
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            p {
-                font-size: 0.9rem;
-            }
-
-            .coupon-button {
-                flex: 1 1 100%; /* Buttons take up full width on smaller screens */
-                font-size: 0.9rem;
-                padding: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.2rem;
-            }
-
-            p {
-                font-size: 0.8rem;
-            }
-
-            .coupon-button {
-                font-size: 0.8rem;
-                padding: 10px;
-            }
-        }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <button class="coupon-button" onclick="window.location.href='index.html'">Mother</button>
-            <button class="coupon-button" onclick="window.location.href='father.html'">Father</button>
-        </div>
-        <br>
-        <h1>Mother's Coupons</h1>
+        <h1>Household Coupons</h1>
         <p>Click a button to activate a coupon!</p>
     </header>
     <div class="container">
         <!-- Example Coupons -->
         <div>
-            <button class="coupon-button" onclick="sendCouponEmail(this, 'Cleaning the Kitchen')">Clean the Kitchen</button>
+            <button class="coupon-button" onclick="handleCouponClick('Cleaning the Kitchen')">Clean the Kitchen</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
         <div>
-            <button class="coupon-button" onclick="sendCouponEmail(this, 'Vacuuming the Living Room')">Vacuum Living Room</button>
+            <button class="coupon-button" onclick="handleCouponClick('Vacuuming the Living Room')">Vacuum Living Room</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
         <div>
-            <button class="coupon-button" onclick="sendCouponEmail(this, 'Mowing the Lawn')">Mow the Lawn</button>
+            <button class="coupon-button" onclick="handleCouponClick('Mowing the Lawn')">Mow the Lawn</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
         <div>
-            <button class="coupon-button" onclick="sendCouponEmail(this, 'Scrabble Session')">Scrabble session</button>
+            <button class="coupon-button" onclick="handleCouponClick('Scrabble Session')">Scrabble session</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
         <div>
-            <button class="coupon-button" onclick="sendCouponEmail(this, 'Free Hug')">Free Hug</button>
+            <button class="coupon-button" onclick="handleCouponClick('Free Hug')">Free Hug</button>
             <p class="confirmation" style="display:none;"></p>
         </div>
     </div>
@@ -139,19 +101,31 @@
         // Initialize EmailJS
         emailjs.init('lY_TBga4LAn4UfOqE'); // Replace with your EmailJS Public Key
 
-        function sendCouponEmail(button, couponName) {
+        function handleCouponClick(couponName) {
+            // Prompt the user for their name
+            const senderName = prompt("Please enter your name:");
+
+            // If the user cancels or enters nothing, return
+            if (!senderName) {
+                alert("Name is required to activate the coupon.");
+                return;
+            }
+
+            // Prepare template parameters
             const templateParams = {
                 to_email: 'filipb.may@gmail.com',
                 coupon_name: couponName,
-                sender_name: 'Mother'
+                sender_name: senderName
             };
 
+            // Send the email
             emailjs.send('service_me1te7g', 'template_zzok6wk', templateParams)
                 .then(function(response) {
                     // Display confirmation
+                    const button = document.querySelector(`button[onclick="handleCouponClick('${couponName}')"]`);
                     const confirmationMessage = button.nextElementSibling;
                     confirmationMessage.style.display = 'block';
-                    confirmationMessage.textContent = `Coupon "${couponName}" has been activated!`;
+                    confirmationMessage.textContent = `Coupon "${couponName}" has been activated by ${senderName}!`;
 
                     // Change button style temporarily
                     button.style.backgroundColor = '#28a745';
